@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-primary-title {
+  @apply text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[130%];
+  color: theme("colors.primary");
+}
+
+.text-sub-title {
+  @apply text-lg md:text-2xl font-medium leading-[130%];
+  color: theme("colors.sub");
+}
+
+.text-card-title {
+  @apply text-sm md:text-base font-semibold leading-[130%];
+  color: theme("colors.primary");
+}
+
+.text-body {
+  @apply text-sm md:text-base font-normal leading-[140%];
+  color: theme("colors.primary");
+}
+
+.text-sub {
+  @apply text-xs md:text-sm font-medium leading-[140%];
+  color: theme("colors.sub");
+}
+
+.text-point {
+  @apply text-sm md:text-base font-semibold leading-[140%];
+  color: theme("colors.point");
+}
+
+.text-divider {
+  @apply text-xs md:text-sm font-normal leading-[140%];
+  color: theme("colors.divider");
+}
+
+body {
+  @apply bg-sky-soft text-primary;
+}
