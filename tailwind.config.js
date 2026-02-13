@@ -13,6 +13,15 @@ module.exports = {
       backgroundImage: {
         "sky-soft": "linear-gradient(to bottom, #CFE2FF, #E8F0F8, #F7F4ED)",
       },
+      animation: {
+        "fade-in": "fadeIn 0.2s ease-out",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
     },
   },
   plugins: [],
