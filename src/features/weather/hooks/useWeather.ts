@@ -15,6 +15,7 @@ export function useWeather({ lat, lon }: UseWeatherParams) {
     },
     enabled: !!(lat && lon),
     staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 30,
     retry: 1,
   });
 
