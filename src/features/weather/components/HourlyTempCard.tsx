@@ -16,18 +16,21 @@ export default function HourlyTempCard({ hourlyData }: Props) {
         </h3>
       </header>
 
-      <div className="overflow-x-auto md:overflow-x-visible">
-        <ul className="flex md:grid md:grid-cols-8 md:gap-4 justify-center">
-          {hourlyData.map((item, index) => (
-            <li
-              key={index}
-              className="flex flex-col items-center min-w-[50px] md:min-w-0"
-            >
-              <time className="text-sub">{item.hour}</time>
-              <span className="text-base mt-1">{item.temp}°</span>
-            </li>
-          ))}
-        </ul>
+      <div className="relative">
+        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none md:hidden z-10" />
+        <div className="overflow-x-auto md:overflow-x-visible scrollbar-hide">
+          <ul className="flex md:grid md:grid-cols-8 md:gap-4 gap-6 justify-start md:justify-center px-2">
+            {hourlyData.map((item, index) => (
+              <li
+                key={index}
+                className="flex flex-col items-center min-w-[50px] md:min-w-0 flex-shrink-0"
+              >
+                <time className="text-sub">{item.hour}시</time>
+                <span className="text-base mt-1">{item.temp}°</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
