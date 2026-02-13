@@ -59,7 +59,6 @@ export async function geocodeAddress(
       });
     });
   } catch (error) {
-    console.error(error);
     return null;
   }
 }
