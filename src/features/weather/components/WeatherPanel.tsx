@@ -20,17 +20,23 @@ interface WeatherPanelProps {
   weatherData: WeatherData;
   hourlyData: HourlyTemp[];
   locationName?: string;
+  lat: number;
+  lon: number;
 }
 
 export default function WeatherPanel({
   weatherData,
   hourlyData,
   locationName,
+  lat,
+  lon,
 }: WeatherPanelProps) {
   return (
     <div className="mt-6">
       <WeatherCard
         location={locationName ?? weatherData.location}
+        lat={lat}
+        lon={lon}
         currentTemp={weatherData.currentTemp}
         minTemp={weatherData.minTemp}
         maxTemp={weatherData.maxTemp}
