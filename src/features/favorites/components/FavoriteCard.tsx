@@ -17,10 +17,14 @@ export default function FavoriteCard({
 }: FavoriteCardProps) {
   const navigate = useNavigate();
 
+  const handleClick = () => {
+    navigate({ to: "/detail", search: { q: location } });
+  };
+
   return (
     <article
       className="
-        rounded-md p-4 shadow-md
+        rounded-md p-6 shadow-md
         bg-gradient-to-br from-white via-sky-50/60 to-blue-50/60
         flex flex-col justify-between w-full
         transition-all duration-200 ease-out
@@ -31,25 +35,32 @@ export default function FavoriteCard({
         active:translate-y-0
         active:shadow-md
       "
-      onClick={() => navigate({ to: "/detail" })}
+      onClick={handleClick}
     >
       <header>
-        <h3 className="text-card-title">{name}</h3>
+        <h3 className="text-card-title truncate" title={name}>
+          {name}
+        </h3>
       </header>
 
-      <p className="text-sub">{location}</p>
+      <p className="text-sub truncate" title={location}>
+        {location}
+      </p>
 
       <div className="mt-2">
-        <p className="font-semibold" aria-label={`현재 온도 ${currentTemp}도`}>
+        <p
+          className="font-semibold mb-[2px]"
+          aria-label={`현재 온도 ${currentTemp}도`}
+        >
           {currentTemp}°
         </p>
 
         <dl className="text-sub">
           <div className="flex gap-1">
-            <dt className="sr-only">최저 온도</dt>
+            <dt>최저</dt>
             <dd>{minTemp}°</dd>
             <span aria-hidden>/</span>
-            <dt className="sr-only">최고 온도</dt>
+            <dt>최고</dt>
             <dd>{maxTemp}°</dd>
           </div>
         </dl>
