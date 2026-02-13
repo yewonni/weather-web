@@ -1,15 +1,8 @@
-import FavoriteCard from "./FavoriteCard";
+import { useFavoriteStore } from "@/features/favorites/store/favoriteStore";
+import FavoriteWeatherItem from "./FavoriteWeatherItem";
 
 export default function FavoriteSection() {
-  const favoriteItems = [
-    {
-      name: "우리집",
-      location: "서울특별시 종로구",
-      currentTemp: 23,
-      minTemp: 18,
-      maxTemp: 25,
-    },
-  ];
+  const favorites = useFavoriteStore((s) => s.favorites);
 
   return (
     <section
@@ -18,16 +11,26 @@ export default function FavoriteSection() {
     >
       <header className="flex items-center gap-2 mb-3">
         <h2 className="text-card-title">즐겨찾는 장소</h2>
-        <p className="text-sub">({favoriteItems.length}/6)</p>
+        <p className="text-sub">({favorites.length}/6)</p>
       </header>
 
-      <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
-        {favoriteItems.map((item, index) => (
-          <li key={index}>
-            <FavoriteCard {...item} />
-          </li>
-        ))}
-      </ul>
+      {favorites.length === 0 ? (
+        <p className="text-sub mt-10 text-center">
+          즐겨찾기한 장소가 없습니다.
+        </p>
+      ) : (
+        <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
+          {favorites.map((fav) => (
+            <FavoriteWeatherItem
+              key={fav.location}
+              location={fav.location}
+              nickname={fav.nickname}
+              lat={fav.lat}
+              lon={fav.lon}
+            />
+          ))}
+        </ul>
+      )}
     </section>
   );
 }
