@@ -1,42 +1,21 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useWeather } from "@/features/weather/hooks/useWeather";
+import { useSearch } from "@/features/search/hooks/useSearch";
+import { useCurrentLocationWeather } from "@/features/location/hooks/useCurrentLocationWeather";
+
 import SearchWrapper from "@/features/search/components/SearchWrapper";
 import WeatherPanel from "@/features/weather/components/WeatherPanel";
 import WeatherSkeleton from "@/features/weather/components/WeatherSkeleton";
 import ErrorMessage from "@/shared/ui/ErrorMessage";
 import FavoriteSection from "@/features/favorites/components/FavoriteSection";
-import { useSearch } from "@/features/search/hooks/useSearch";
-import { useGeolocation } from "@/features/location/hooks/useGeolocation";
-import { getDongNameFromCoords } from "@/features/location/lip/geocode";
 
 export default function HomePage() {
   const navigate = useNavigate();
+
   const { searchText, setSearchText, setIsFocus, results, showDropdown } =
     useSearch();
-  const { latitude, longitude, isLoading: isLoadingGeo } = useGeolocation();
 
-  const [coords, setCoords] = useState<{ lat: number; lon: number }>({
-    lat: 37.5665,
-    lon: 126.978,
-  });
-  const [locationName, setLocationName] = useState("서울");
-  const [showGeoNotice, setShowGeoNotice] = useState(false);
-
-  useEffect(() => {
-    if (!isLoadingGeo) {
-      if (latitude && longitude) {
-        setCoords({ lat: latitude, lon: longitude });
-        getDongNameFromCoords(latitude, longitude).then((dongName) => {
-          if (dongName) setLocationName(dongName);
-        });
-      } else {
-        setShowGeoNotice(true);
-        setCoords({ lat: 37.5665, lon: 126.978 });
-        setLocationName("서울");
-      }
-    }
-  }, [isLoadingGeo, latitude, longitude]);
+  const { coords, locationName, showGeoNotice } = useCurrentLocationWeather();
 
   const {
     weatherData,
@@ -44,7 +23,10 @@ export default function HomePage() {
     isLoading,
     isError,
     error: weatherError,
-  } = useWeather({ lat: coords.lat, lon: coords.lon });
+  } = useWeather({
+    lat: coords.lat,
+    lon: coords.lon,
+  });
 
   const handleSelect = (fullAddress: string) => {
     setSearchText(fullAddress);
@@ -61,7 +43,7 @@ export default function HomePage() {
         />
       )}
 
-      <div className="flex flex-col">
+      <div className="flex flex-col lg:pr-12 lg:border-r lg:border-divider/40">
         <div className="z-[110]">
           <SearchWrapper
             value={searchText}
@@ -101,6 +83,8 @@ export default function HomePage() {
               weatherData={weatherData}
               hourlyData={hourlyData}
               locationName={locationName}
+              lat={coords.lat}
+              lon={coords.lon}
             />
           )}
         </div>
