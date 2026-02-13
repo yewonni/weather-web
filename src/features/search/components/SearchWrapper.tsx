@@ -21,10 +21,6 @@ export default function SearchWrapper({
 }: SearchWrapperProps) {
   return (
     <>
-      {showDropdown && (
-        <div className="fixed inset-0 bg-black/20 z-40" onClick={onBlur} />
-      )}
-
       <div className="relative z-50">
         <input
           type="text"
