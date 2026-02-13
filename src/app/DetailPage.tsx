@@ -6,7 +6,6 @@ import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import ErrorMessage from "@/shared/ui/ErrorMessage";
 import { getCoordsFromAddress } from "@/features/location/lip/geocode";
 import { useWeather } from "@/features/weather/hooks/useWeather";
-import { useFavorite } from "@/features/favorites/hooks/useFavorite";
 import backIcon from "@/assets/back.svg";
 
 export default function DetailPage() {
@@ -16,8 +15,6 @@ export default function DetailPage() {
 
   const [coords, setCoords] = useState<{ lat: number; lon: number }>();
   const [isLoadingCoords, setIsLoadingCoords] = useState(true);
-
-  const { isFavorite, nickname, toggleFavorite, editNickname } = useFavorite();
 
   useEffect(() => {
     async function loadCoords() {
@@ -59,20 +56,18 @@ export default function DetailPage() {
           />
         )}
 
-        {!isLoadingAny && !isError && weatherData && hourlyData && (
+        {!isLoadingAny && !isError && weatherData && hourlyData && coords && (
           <>
             <WeatherCard
               location={address}
+              lat={coords.lat}
+              lon={coords.lon}
               currentTemp={weatherData.currentTemp}
               minTemp={weatherData.minTemp}
               maxTemp={weatherData.maxTemp}
               description={weatherData.description}
               WeatherIcon={weatherData.weatherIcon}
               variant="detail"
-              isFavorite={isFavorite}
-              nickname={nickname}
-              onToggleFavorite={toggleFavorite}
-              onEditNickname={editNickname}
             />
             <HourlyTempCard hourlyData={hourlyData} />
           </>
