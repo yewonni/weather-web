@@ -1,73 +1,219 @@
-# React + TypeScript + Vite
+# weather-web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 배포 주소
+https://weather-web-sand.vercel.app/
 
-Currently, two official plugins are available:
+--- 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 프로젝트 소개
 
-## React Compiler
+현재 위치 기반 날씨 정보와 즐겨찾기 기능을 제공하는 웹앱입니다.  
+사용자는 실시간 날씨, 시간대별 예보를 확인하고, 관심 있는 지역을 즐겨찾기에 저장할 수 있습니다.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+또한 지역 검색 기능을 통해 원하는 지역을 빠르게 찾고, 선택한 장소의 날씨 데이터를 조회할 수 있도록 구현했습니다.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 💡 프로젝트 실행 방법
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 1. 저장소 클론
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+git clone https://github.com/yewonni/weather-web.git  
+cd weather-web  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+
+### 2. 환경 변수 설정
+(과제 실행 재현을 위해 실제 동작 가능한 API Key 기준으로 제공)
+
+루트 경로에 .env.local 파일을 생성하고 아래 값을 추가해야 합니다.
+```
+VITE_OPENWEATHER_API_KEY=0ddecb5549f8d9ed92576356de1453b9
+VITE_KAKAO_JS_KEY=0b3d8cfb39a5ed3df46539421bbf66c4
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 3. 패키지 설치
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+npm install  
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+
+### 4. 개발 서버 실행
+
+npm run dev   
+
+### 5. 브라우저에서 확인
+
+http://localhost:5173
+
+---
+
+## 🌤️ 구현한 기능
+
+### 현재 위치 기반 날씨 조회
+- 사용자의 현재 위치를 기반으로 실시간 날씨 정보 제공
+- 위치 권한 거부 혹은 오류 시 서울 날씨 기본 제공
+- 현재 온도, 최저/최고 온도, 날씨 상태 표시
+
+### 시간대별 날씨 예보
+- 시간대별 온도 제공 (3시간 단위)
+- 사용자가 하루 날씨 흐름을 직관적으로 확인 가능
+
+### 즐겨찾기 기능
+- 관심 지역 즐겨찾기 저장(최대 6개) 및 삭제 가능
+- 관심 지역 별칭 수정 기능 제공
+- 저장된 지역은 홈 화면에서 바로 조회 가능
+
+---
+
+### 사용자 친화적 지역 검색 기능
+
+JSON 기반 전국 구·동 데이터를 활용하여 지역 검색 기능을 구현했습니다.
+
+데이터는  
+"서울특별시-종로구-청운동" 형태이지만  
+사용자는 하이픈을 의식하지 않고 검색할 수 있습니다.
+
+
+**UX 효과 :**
+- 입력 형식에 대한 부담 없이 검색 가능
+- 검색 결과 즉시 드롭다운 표시
+- dim 처리 배경 및 검색어 하이라이팅 스타일로 직관적인 UX 제공
+
+---
+
+### 실시간 지역 검색 + 선택 기반 날씨 조회
+
+사용자가 입력하면 로컬 JSON 데이터를 즉시 필터링하여 검색 결과를 표시합니다.  
+실제 날씨 API 호출은 사용자가 지역을 선택했을 때 한 번만 발생하도록 구현했습니다.
+
+**구현 목적 :**
+- 빠른 UX 제공
+- 불필요한 API 호출 방지
+- Dropdown UI 안정성 확보
+
+**디바운스 관련 고려 :**
+- 로컬 JSON 데이터는 필터링 속도가 매우 빠름
+- 디바운스 적용 시 검색 결과 표시 지연 발생 가능
+- API 호출은 선택 시 1회만 발생
+- 따라서 UX 응답성과 구조 단순성을 고려하여 디바운스는 적용하지 않음
+
+**동작 방식 :**
+
+(입력 중)
+- 로컬 JSON 즉시 필터링  
+- 네트워크 요청 없음  
+
+(선택 시)  
+- 선택 지역 기준 날씨 API 1회 호출  
+- 상세 날씨 화면 이동  
+- Dropdown 자동 닫힘  
+
+(장점)
+- 빠른 검색 경험 제공  
+- API 비용 절감  
+- 직관적인 입력 → 선택 UX 구조  
+
+---
+
+## ⚒️ 기술적 의사결정 및 이유
+
+### React + Vite
+빠른 개발 환경과 빌드 속도를 확보하기 위해 선택했습니다.
+
+### Tanstack Query
+서버 상태 관리 및 캐싱을 통한 API 호출 최적화를 위해 사용했습니다.
+
+### Zustand
+가볍고 간결한 전역 상태 관리를 위해 선택했습니다.
+
+### SPA 구조
+클라이언트 중심 렌더링으로 빠른 화면 전환과 상태 관리 효율성을 확보했습니다.
+
+---
+
+## 📌 한계 및 주의 사항
+
+본 프로젝트는 Kakao 지도 API와 OpenWeatherMap 날씨 API를 함께 사용하여 날씨 정보를 제공합니다.  
+각 API의 특성과 한계를 고려하여 구현했으며 주요 내용은 다음과 같습니다.
+
+### 주소 검색
+
+사용자가 입력한 검색어는 Kakao Maps API를 통해 좌표로 변환됩니다.
+
+**검색 가능 단위 :**  
+  - 대한민국 기준 시 / 구 / 동 단위까지 지원합니다.
+
+**Kakao API를 사용한 이유 :**   
+  - OpenWeatherMap API만으로는 서울, 종로구, 청담동과 같은 세부 행정동 단위까지 정확한 좌표를 가져오기 어렵습니다.
+
+Ex)  
+ OpenWeatherMap에서 “서울”로 검색하면  
+ 서울 전체 기준 날씨만 반환되며  
+ 구 / 동 단위 구분이 불가능합니다.
+
+따라서 사용자가 선택한 정확한 행정동 주소를 Kakao Maps API에서 좌표로 변환하고  
+해당 좌표를 OpenWeatherMap API에 전달하여  
+가장 가까운 관측소 기준 날씨를 가져오도록 구현했습니다.
+
+---
+
+### 날씨 정보
+
+OpenWeatherMap API는 좌표 기반 날씨 데이터를 제공합니다.
+
+API 특성상, 대한민국 기준 행정동 단위 정확한 날씨는 보장되지 않습니다.
+
+Ex)  
+ 사용자가 “청담동”을 선택하더라도  
+ 해당 지역 내부 관측소가 없는 경우  
+ 근처 관측소 기준 날씨가 반환될 수 있습니다.
+
+이로 인해 발생할 수 있는 사용자 혼동을 방지하기 위해,
+UI에는 OpenWeatherMap 응답 지역명이 아닌  
+사용자가 Kakao에서 선택한 주소명을 그대로 표시하도록 구현했습니다.
+
+---
+
+### 예외 처리
+
+날씨 데이터가 없는 경우  
+→ “해당 장소의 정보가 제공되지 않습니다.” 메시지 표시  
+
+좌표 변환 실패 시  
+→ 에러 메시지 표시  
+
+---
+
+### 설계 결론
+
+본 구조는 다음 두 가지 요구사항 사이의 균형을 목표로 설계했습니다.
+
+1.정확한 위치 선택  
+2.실시간 날씨 데이터 제공  
+
+OpenWeatherMap API의 좌표 기반 구조와  
+대한민국 행정동 단위 날씨 데이터 한계를 고려하여  
+사용자 경험을 해치지 않는 방향으로 UI와 데이터 흐름을 설계했습니다.
+
+---
+
+## ⚙️ 사용한 기술 스택
+
+**[프론트엔드]**   
+ React  
+ Vite  
+ TypeScript  
+ Tailwind CSS  
+ React Icons  
+
+**[상태 관리]**    
+ Zustand  
+
+**[서버 상태 관리]**  
+ TanStack Query
+
+**[API 통신]**  
+ Fetch
+
+**[배포]**  
+ Vercel  
+
