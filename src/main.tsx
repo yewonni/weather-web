@@ -5,10 +5,12 @@ import {
   createRouter,
   createRootRoute,
   createRoute,
+  NotFoundRoute,
 } from "@tanstack/react-router";
 import App from "./app/App";
 import HomePage from "./app/HomePage";
 import DetailPage from "./app/DetailPage";
+import NotFoundPage from "./app/NotFound";
 import "./styles/index.css";
 
 const rootRoute = createRootRoute({
@@ -40,9 +42,17 @@ const detailRoute = createRoute({
   },
 });
 
+const notFoundRoute = new NotFoundRoute({
+  getParentRoute: () => rootRoute,
+  component: NotFoundPage,
+});
+
 const routeTree = rootRoute.addChildren([indexRoute, detailRoute]);
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  notFoundRoute,
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
